@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPDD</title>
+    <script src="js/gsap.js"></script>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            font-size: 2vmin;
+            font-family: sans-serif;
+            --black: #0a0a0a;
+            --white: #fafafa;
+            --pink: #FC85AA;
+        }
+
+        p {
+            user-select: none;
+        }
+
+        a {
+            user-select: none;
+            text-decoration: none;
+        }
+
+        img {
+            pointer-events: none;
+            user-select: none;
+        }
+
+        div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100vh;
+            background-color: var(--white);
+            overflow: hidden;
+        }
+
+        @media screen and (max-aspect-ratio: 0.7/1) {
+            * {
+                font-size: 1.5vmax;
+            }
+        }
+
+        .background {
+            position: absolute;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .background img {
+            position: absolute;
+            width: 3rem;
+        }
+
+        .cards_box {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            perspective: 100rem;
+        }
+
+        .maintitle {
+            position: absolute;
+            width: 80vmax;
+            transform: translateY(-25%);
+        }
+
+        .maintitle path {
+            fill: none;
+            stroke: url(#maintitle_gradient);
+            stroke-width: 32;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 4500;
+            stroke-dashoffset: 4500;
+        }
+
+        .subtitle {
+            position: absolute;
+            width: 20vmax;
+            pointer-events: none;
+            transform: translate(120%, 120%);
+        }
+
+        .subtitle path {
+            fill: none;
+            stroke: var(--pink);
+            stroke-width: 36;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 4600;
+            stroke-dashoffset: 4600;
+            animation: subtitle_animation 3s ease infinite;
+        }
+
+        @keyframes subtitle_animation {
+            0% {
+                stroke-dashoffset: 4600;
+            }
+
+            25% {
+                stroke-dashoffset: 0;
+            }
+
+            75% {
+                stroke-dashoffset: 0;
+            }
+
+            100% {
+                stroke-dashoffset: -4600;
+            }
+        }
+
+        @media screen and (max-aspect-ratio: 0.7/1) {
+            .maintitle {
+                width: 110vmin;
+                top: 14%;
+            }
+
+            .subtitle {
+                width: 30vmin;
+                top: 0;
+            }
+        }
+
+        .portrait,
+        .about,
+        .contact,
+        .pictures {
+            box-sizing: border-box;
+            position: absolute;
+            width: 24rem;
+            height: 32rem;
+            background-color: var(--white);
+            border: 0.5rem solid var(--black);
+            box-shadow: 1rem 1rem 0.8rem #00000036;
+            margin-top: -2rem;
+            transform: rotateY(90deg) rotateX(-5deg);
+        }
+
+        .portrait::after {
+            content: '';
+            position: absolute;
+            left: -3.2rem;
+            top: 0rem;
+            width: 10rem;
+            height: 3.2rem;
+            background-color: #f0d38e;
+            clip-path: polygon(0% 0%, 100% 0%, 90% 50%, 100% 100%, 0% 100%, 10% 50%);
+            transform: rotate(-30deg);
+        }
+
+        .portrait_body {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .portrait_body>image,
+        .portrait_body>g {
+            transform: translateY(10%);
+        }
+
+        .portrait_body_arm_prop {
+            cursor: pointer;
+        }
+
+        .portrait_head {
+            position: absolute;
+            top: 3.5rem;
+            width: 9.5rem;
+            height: 9.5rem;
+            margin-left: 1rem;
+        }
+
+        .portrait_head svg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        .portrait_head_face {
+            cursor: pointer;
+            clip-path: url(#portrait_head_mask);
+        }
+
+        .portrait_chatbox {
+            position: absolute;
+            top: 5rem;
+            right: -2rem;
+            transform: rotate(-5deg);
+        }
+
+        .portrait_chatbox img {
+            position: absolute;
+            width: 15rem;
+        }
+
+        .portrait_chatbox_content {
+            position: absolute;
+            text-align: center;
+            width: 10rem;
+            font-size: 1rem;
+            color: var(--black);
+        }
+
+        .about {
+            flex-direction: column;
+            justify-content: start;
+            align-items: start;
+            padding: 2rem;
+            overflow-y: scroll;
+            visibility: hidden;
+        }
+
+        .about_title {
+            align-self: center;
+            font-size: 2.5rem;
+            color: var(--pink);
+            letter-spacing: 0.05rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+        }
+
+        .about_subtitle {
+            font-size: 1.2rem;
+            color: var(--pink);
+            letter-spacing: 0.1rem;
+            font-weight: 900;
+            margin-bottom: 0.4rem;
+        }
+
+        .about_content {
+            font-size: 1rem;
+            color: var(--black);
+            margin-bottom: 1.2rem;
+        }
+
+        .about_title,
+        .about_subtitle,
+        .about_content {
+            transform: translateY(10%);
+            opacity: 0;
+        }
+
+        .pictures {
+            visibility: hidden;
+        }
+
+        .pictures_picturebox {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .pictures_picturebox div {
+            position: relative;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .pictures_picturebox div img {
+            width: 100%;
+        }
+
+        .pictures_button_left {
+            position: absolute;
+            top: 2rem;
+            left: -8rem;
+            width: 10rem;
+            cursor: pointer;
+            transform: translateX(100%);
+            opacity: 0;
+        }
+
+        .pictures_button_right {
+            position: absolute;
+            bottom: 2rem;
+            right: -8rem;
+            width: 10rem;
+            cursor: pointer;
+            transform: translateX(-100%);
+            opacity: 0;
+        }
+
+        .pictures_button_left path {
+            transform: rotateY(180deg);
+            transform-origin: center;
+        }
+
+        .pictures_button_left path,
+        .pictures_button_right path {
+            fill: var(--black);
+            transition: 0.5s ease;
+        }
+
+        .pictures_button_left:hover path,
+        .pictures_button_right:hover path {
+            fill: #F0D38E;
+        }
+
+        .contact {
+            visibility: hidden;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .contact_title {
+            font-size: 2.8rem;
+            color: var(--pink);
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+            transform: translateY(10%);
+            opacity: 0;
+        }
+
+        .contact_information {
+            justify-content: start;
+            width: 85%;
+            margin-bottom: 1rem;
+            transform: translateY(10%);
+            opacity: 0;
+        }
+
+        .contact_information img {
+            width: 2rem;
+            height: 2rem;
+            margin-right: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .contact_information p {
+            font-size: 1.2rem;
+            color: var(--black);
+            font-weight: 900;
+        }
+
+        .contact_codes {
+            justify-content: space-between;
+            width: 85%;
+            margin-top: 1.5rem;
+            transform: translateY(10%);
+            opacity: 0;
+        }
+
+        .contact_codes_code {
+            flex-direction: column;
+        }
+
+        .contact_codes_code img {
+            position: relative;
+            width: 5rem;
+            height: 5rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .contact_codes_code p {
+            font-size: 0.8rem;
+            color: var(--pink);
+            font-weight: 900;
+        }
+
+        @media screen and (max-aspect-ratio: 0.7/1) {
+            .portrait_chatbox {
+                top: -2rem;
+                right: 6rem;
+                transform: rotate(-10deg);
+            }
+        }
+
+        .selectbox {
+            position: absolute;
+            bottom: 7%;
+            padding: 1rem 2rem;
+            background-color: #000000aa;
+            border-radius: 5rem;
+            transform: scaleX(0);
+        }
+
+        .selectbox_selection {
+            position: relative;
+            margin: 0 1rem;
+            cursor: pointer;
+        }
+
+        .selectbox_selection::after {
+            content: '';
+            position: absolute;
+            bottom: -0.8rem;
+            left: 0;
+            height: 0.25rem;
+            width: 100%;
+            background-color: var(--pink);
+            transform-origin: left;
+            transform: scaleX(0);
+            transition: 1s ease;
+        }
+
+        .selectbox_selection img {
+            position: relative;
+            width: 2.5rem;
+            transition: 0.3s ease;
+        }
+
+        .selectbox_selection:hover img {
+            transform: translateY(-5%);
+        }
+
+        .selectbox_selection_selected::after {
+            transform: scaleX(1);
+        }
+
+        @media screen and (max-aspect-ratio: 0.7/1) {
+            .selectbox {
+                bottom: 14%;
+            }
+        }
+
+        .musictip {
+            position: absolute;
+            width: 4rem;
+            height: 4rem;
+            top: 1rem;
+            right: 2rem;
+            cursor: pointer;
+        }
+
+        .musictip img {
+            position: absolute;
+            width: 100%;
+            transition: transform 0.3s ease;
+        }
+
+        .musictip:hover img {
+            transform: scale(1.1);
+        }
+
+        .musictip img:nth-child(1) {
+            visibility: visible;
+        }
+
+        .musictip img:nth-child(2) {
+            visibility: hidden;
+        }
+
+        .musictip_off img:nth-child(1) {
+            visibility: hidden;
+        }
+
+        .musictip_off img:nth-child(2) {
+            visibility: visible;
+        }
+
+        @media screen and (max-aspect-ratio: 0.7/1) {
+            .musictip {
+                width: 3.5rem;
+                height: 3.5rem;
+                top: auto;
+                right: auto;
+                bottom: 7%;
+            }
+        }
+
+        .authortip,
+        .record {
+            position: absolute;
+            bottom: 1rem;
+            font-size: 1.2rem;
+            color: var(--black);
+            letter-spacing: 0.05rem;
+            transition: 0.3s ease;
+            cursor: pointer;
+        }
+
+        .authortip {
+            left: 2rem;
+            font-weight: 900;
+        }
+
+        .record {
+            right: 2rem;
+        }
+
+        .authortip:hover,
+        .record:hover {
+            color: var(--pink);
+        }
+
+        @media screen and (max-aspect-ratio: 0.7/1) {
+
+            .authortip,
+            .record {
+                bottom: 1rem;
+                font-size: 1rem;
+            }
+
+            .authortip {
+                left: auto;
+                transform: translateY(-100%);
+            }
+
+            .record {
+                right: auto;
+            }
+        }
+
+        .loading {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(45deg, #F573EC, #FC85AA) no-repeat;
+            z-index: 10000000;
+        }
+
+        .loading_icon {
+            position: absolute;
+            width: 5rem;
+            height: 5rem;
+            overflow: visible;
+        }
+
+        .loading_icon path {
+            fill: #00000000;
+            stroke: var(--white);
+            stroke-width: 50;
+            stroke-dashoffset: 1500;
+            stroke-dasharray: 1500;
+            transition: 0.8s ease;
+            animation: icon_loading 1s ease-in-out infinite;
+        }
+
+        @keyframes icon_loading {
+            0% {
+                stroke-dashoffset: 1500;
+            }
+
+            100% {
+                stroke-dashoffset: -1500;
+            }
+        }
+
+        .loading_tips {
+            flex-direction: column;
+            justify-content: start;
+            position: absolute;
+            height: 2rem;
+            transform: translateY(250%);
+            overflow: hidden;
+        }
+
+        .loading_tips p {
+            height: 2rem;
+            font-size: 1.4rem;
+            color: var(--white);
+            text-transform: uppercase;
+            font-weight: 900;
+            letter-spacing: 0.2rem;
+            transition: 0.3s ease;
+        }
+
+        .loading_tips p:nth-child(2) {
+            cursor: pointer;
+        }
+
+        .loading_tips p:nth-child(2):hover {
+            letter-spacing: 0.5rem;
+        }
+
+        .loading_over .loading_icon path {
+            fill: var(--white);
+            stroke-width: 0;
+        }
+
+        .loading_over p {
+            transform: translateY(-100%);
+        }
+
+        .loading_hidden {
+            visibility: hidden;
+        }
+
+        .loading_hidden .loading_icon path {
+            animation-play-state: paused;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="background">
+    </div>
+    <div class="cards_box">
+        <svg class="maintitle" viewBox="0 0 1222.8 421.5">
+            <defs>
+                <linearGradient id="maintitle_gradient">
+                    <stop offset="0%" style="stop-color:#F573EC;" />
+                    <stop offset="100%" style="stop-color:#FC85AA; " />
+                </linearGradient>
+            </defs>
+            <path
+                  d="M274.2,59.2c0,0-6.8-17.8-30.3-26.2c-57-19.5-71.1,37.9-78.9,144.9c-7.8,107,6.8,186.1,26.9,212.9
+        c47.3,49.3,23.5-153.7-107.1-182.7c-80-22.6,129.9,82.6,173.3,48.9s67.4-87.5,94.6-41.8s-7.8,174.4-59.6,132.6
+        s-41.5-129.1,21.9-153.4c106.7-39.9,121.6,153.4,137.5,155.7s1-170.5,32.4-159.4c40.2,15,6.3,73,52.3,89.7
+        c46,16.7,87.8-58,124.9-136.5C699.1,65.4,700.2,23,657.4,23c-46.2-1.3-104.1,149.6-74.4,274.2c38.2,157.7,96.2-94.2,166.2-78
+        c40.2,11.1,38.8,59,5.3,107.8c-33.5,48.8-92.3,37.1-89.2-32.3s58.5-106.7,98.5-88.3c112.1,38.5,58,170.3,84.7,149.4
+        c26.7-20.9,65.3-157.2,74-153.8s-32.1,108.7,5.5,113.7c37.6,5,141.6-37.1,146.6-75.4s-52.9-63-84.2-22.3
+        c-50.5,66.5,28.1,129.5,44.6,135.6c16.5,6.1,76.6-18.2,107.4-50.2c20.2-20.9,17.6-56.3-4.1-65.8c-21.7-9.5-40.1,35.5-25.6,42.7" />
+        </svg>
+        <div class="portrait">
+            <svg class="portrait_body" viewBox="0 0 593 940">
+                <image width="593" height="940"
+                       xlink:href="imgs/portrait/man body.svg" />
+                <g class="portrait_body_shoulder" transform-origin="116 382">
+                    <image width="593" height="940"
+                           xlink:href="imgs/portrait/man shoulder.svg" />
+                    <g class="portrait_body_arm" transform-origin="50.3 626.7">
+                        <image class="portrait_body_arm_prop" width="1080"
+                               height="1920" xlink:href="imgs/props/prop 1.png"
+                               onclick="cards.portrait.change()"
+                               transform="matrix(0.1027 3.573563e-02 -3.573563e-02 0.1027 278.5495 615.2966)">
+                        </image>
+                        <image width="593" height="940"
+                               style="pointer-events: none;"
+                               xlink:href="imgs/portrait/man arm.svg" />
+                    </g>
+                </g>
+            </svg>
+            <div class="portrait_head">
+                <svg viewBox="0 0 100 100">
+                    <clipPath id="portrait_head_mask">
+                        <polygon points="98.3,1.3 98.3,69.9 95.1,81.7 96.6,96.4 80.7,95.5 74.8,
+                            98.7 74.4,98.7 67.9,98.5 32.3,94.6 15.2,97 15.2,97 11.9,
+                            95.5 3.6,96.6 7.9,66.4 2.6,53.6 2.1,33.1 6.1,23 1.7,
+                            10.9 41.4,5.4 76.4,5.6 " />
+                    </clipPath>
+                </svg>
+            </div>
+            <div class="portrait_chatbox">
+                <img src="imgs/portrait/chatbox.svg">
+                <p class="portrait_chatbox_content">
+                    cp滴滴滴滴滴滴滴滴，牵牵我的手，摸摸我的脸；我会给你惊喜哦~ </p>
+            </div>
+        </div>
+        <div class="about">
+            <p class="about_title">about me</p>
+            <p class="about_subtitle">基本信息:</p>
+            <p class="about_content">
+                你好鸭，我是帅小伙，是一个阳光大男孩，目前在M78星云负责凹凸曼的结缔组织修剪工作，我生活在山东哥谭，享受着这里的文化和生活方式。
+                在日常生活中，我是一个乐于助人，善于拔枪相助的男子汉。 </p>
+            <p class="about_subtitle">兴趣爱好:</p>
+            <p class="about_content">
+                我的兴趣爱好涉猎广泛；我喜欢吃饭、睡觉、摸鱼、打豆豆，，在莫事的时候，我喜欢研究广义相对论、线性代数，微只因分，，，
+                无论是一本书、一部电影、还是一次见义勇为；我相信，在生活中不断的学习和体验可以让人保持年轻和活力。 </p>
+            <p class="about_subtitle">伴侣期望:</p>
+            <p class="about_content"> 我希望能找到一位有共同价值观的伴侣；在我看来，不一定是富婆、富姨、富姐、哪怕是富妹；
+                钞能力是任何关系中最坚毅的一部分。 我希望我们可以一起分享将邪恶金钱力量消灭的快感，共同享受和探索这个金彩的世界。 </p>
+        </div>
+        <div class="pictures">
+            <svg class="pictures_button_left" viewBox="0 0 48 48"
+                 onclick="cards.pictures.change_picture(1)">
+                <path
+                      d="M17.17 32.92l9.17-9.17-9.17-9.17 2.83-2.83 12 12-12 12z" />
+            </svg>
+            <div class="pictures_picturebox">
+                <div nums=0><img src=""></div>
+                <div nums=1>
+                    <img src="imgs/pictures/picture (4).jpg">
+                </div>
+                <div nums=2><img src=""></div>
+            </div>
+            <svg class="pictures_button_right" viewBox="0 0 48 48"
+                 onclick="cards.pictures.change_picture(-1)">
+                <path
+                      d="M17.17 32.92l9.17-9.17-9.17-9.17 2.83-2.83 12 12-12 12z" />
+            </svg>
+        </div>
+        <div class="contact">
+            <div class="contact_title">contact me</div>
+            <div class="contact_information">
+                <img src="imgs/icons/icon wechat.svg">
+                <p>JIEJOE</p>
+            </div>
+            <div class="contact_information">
+                <img src="imgs/icons/icon qq.svg">
+                <p>1055274233</p>
+            </div>
+            <div class="contact_information">
+                <img src="imgs/icons/icon email.svg">
+                <p>jie_joe@qq.com</p>
+            </div>
+            <div class="contact_codes">
+                <div class="contact_codes_code">
+                    <img src="imgs/codes/email code.png">
+                    <p>WX</p>
+                </div>
+                <div class="contact_codes_code">
+                    <img src="imgs/codes/email code.png">
+                    <p>QQ</p>
+                </div>
+                <div class="contact_codes_code">
+                    <img src="imgs/codes/email code.png">
+                    <p>Email</p>
+                </div>
+            </div>
+        </div>
+        <svg class="subtitle" viewBox="0 0 1322 705">
+            <path
+                  d="M240.8,295.3c0,0-10-74.8-122.3,3.1C44.6,350.3,13.6,439.8,76,468.6c76.9,33.3,245.8-104.2,245.8-104.2
+            L209.9,679.9c0,0,155.2-393,296.7-314c40.8,27.6-100.3,95.2-55.5,116.1c33,11.9,242.8-131.5,250.3-119.6
+            c7.5,11.9-89,81.6-52.9,108.2c36.1,26.5,360.3-405.4,289.1-432.1C858.6,7.9,762.3,443.8,789.6,468.1s207.7-115.6,212.5-106.8
+            c4.8,8.8-81.3,83.2-44,108.8c37.3,25.7,347.2-407.3,277-431.8s-160.1,406.1-144.3,428.3s98.7-31.5,98.7-31.5" />
+        </svg>
+    </div>
+    <div class="selectbox">
+        <div class="selectbox_selection selectbox_selection_selected selectbox_selection_portrait"
+             onclick="cards.change_card('portrait')">
+            <img src="imgs/icons/icon portrait.svg">
+        </div>
+        <div class="selectbox_selection selectbox_selection_about"
+             onclick="cards.change_card('about')">
+            <img src="imgs/icons/icon about.svg">
+        </div>
+        <div class="selectbox_selection selectbox_selection_pictures"
+             onclick="cards.change_card('pictures')">
+            <img src="imgs/icons/icon picture.svg">
+        </div>
+        <div class="selectbox_selection selectbox_selection_contact"
+             onclick="cards.change_card('contact')">
+            <img src="imgs/icons/icon tel.svg">
+        </div>
+    </div>
+    <div class="musictip" onclick="audio.change_playstate()">
+        <img src="imgs/icons/icon headset.svg">
+        <img src="imgs/icons/icon headset off.svg">
+    </div>
+    <a class="authortip" href="https://www.jiejoe.com" target="_blank"> DESIGNED
+        BY JIEJOE </a>
+    <a class="record" href="https://www.jiejoe.com"
+       target="_blank">叽ICP备8208208820号-1 </a>
+    <div class="loading">
+        <svg class="loading_icon" viewBox="0 0 842 750">
+            <path
+                  d="M835,270.9c0,236.3-214.5,251.5-413.8,473.1C221.5,522.4,7,507.2,7,270.9C7,170.6,48.5,83.2,124.7,37.7
+	c2.7-0.9,4.9-2.2,7.6-3.6c27.6-14.3,58-23.2,90.1-26.8c9.4-0.9,18.7-1.3,28.5-1.3c113.3,0,169.9,123.4,169.9,123.4S482.8,6,591.1,6
+	c9.8,0,19.2,0.4,28.5,1.3c32.1,3.6,62.4,12.9,90.1,26.8c2.7,1.3,4.9,2.7,7.6,3.6C793.5,83.2,835,170.6,835,270.9z" />
+        </svg>
+        <div class="loading_tips">
+            <p>loading</p>
+            <p onclick="loading.hidden()">enter</p>
+        </div>
+    </div>
+</body>
+<script>
+    const loading = {
+        init() {
+            document.querySelector(".loading").classList.add("loading_over");
+        },
+        hidden() {
+            gsap.timeline()
+                .to(".loading_icon", {
+                    'width': '200vmax',
+                    'height': '200vmax',
+                    duration: 0.8,
+                    ease: 'power1.out',
+                    onComplete: () => {
+                        document.querySelector(".loading").classList.add("loading_hidden");
+                    }
+                })
+                .to(".loading", {
+                    opacity: 0,
+                    duration: 0.8,
+                    ease: 'power4.out',
+                    onStart: () => {
+                        cards.show();
+                        audio.init();
+                    }
+                }, "<0.2");
+        }
+    };
+    const cards = {
+        current_card: 'portrait',
+        next_card: '',
+        if_changing: false,
+        show() {
+            gsap.timeline()
+                .to('.maintitle path', {
+                    'stroke-dashoffset': 0,
+                    duration: 1.8,
+                    ease: 'power4.out',
+                })
+                .to('.portrait', {
+                    rotateY: '0deg',
+                    duration: 0.8,
+                    ease: 'power4.out',
+                }, "<")
+                .to('.selectbox', {
+                    'transform': 'scaleX(1)',
+                    duration: 0.8,
+                    ease: 'power4.out',
+                }, "<");
+        },
+        change_card(next) {
+            if (this.if_changing || this.current_card == next)
+                return 0;
+            this.if_changing = true;
+            this.next_card = next;
+            document.querySelector(`.selectbox_selection_${next}`)
+                .classList.add("selectbox_selection_selected");
+            document.querySelector(`.selectbox_selection_${this.current_card}`)
+                .classList.remove("selectbox_selection_selected");
+            cards[this.current_card].hidden();
+        },
+        check() {
+            gsap.timeline()
+                .to(`.${this.current_card}`, {
+                    rotateY: '90deg',
+                    duration: 0.3,
+                    ease: 'linear',
+                    onComplete: () => {
+                        cards[this.next_card].show();
+                    }
+                })
+                .to(`.${this.next_card}`, {
+                    rotateY: '0deg',
+                    duration: 0.3,
+                    ease: 'power1.out',
+                    onStart: () => {
+                        document.querySelector(`.${this.current_card}`)
+                            .style.visibility = 'hidden';
+                        this.current_card = this.next_card;
+                        document.querySelector(`.${this.next_card}`)
+                            .style.visibility = 'visible';
+                    },
+                });
+        },
+        portrait: {
+            player: 0,
+            prop_index: 0,
+            props: [],
+            faces: [],
+            contents: [
+                'cp滴滴滴滴滴滴滴滴，牵牵我的手，摸摸我的脸；我会给你惊喜哦~',
+                '我这个月的工资只够买一支玫瑰，但我还是迫不及die给你买了',
+                '喝奶茶吗？我有QQ咩咩好喝到噗叽噗叽茶！',
+                '我有酒，还有故事，你有麦当劳吮指原味鸡吗？',
+                '高跟鞋走路不方便，可不能委屈了我的小公主',
+                '看我给你买的礼物，超级可爱的小熊熊欸~',
+                '我用我老家房子抵押的钱，给你买了一个戒指',
+                '这个粉色的麦克风特别适合你，我们一起去嗨歌吧~',
+                '我这里有我洗澡的照片，你不想欣赏欣赏吗？',
+            ],
+            if_in: false,
+            if_draged: false,
+            if_dragable: false,
+            limit_distance: 0,
+            target_ele: {},
+            init() {
+                for (let i = 1; i <= 9; i++) {
+                    let face = new Image();
+                    face.src = `imgs/faces/face ${i}.jpg`;
+                    this.faces.push(face);
+                };
+                for (let i = 1; i <= 9; i++) {
+                    let prop = new Image();
+                    prop.src = `imgs/props/prop ${i}.png`;
+                    this.props.push(prop);
+                };
+                if (!if_pmd) {
+                    window.addEventListener("mousedown", () => {
+                        if (this.if_in) { this.if_dragable = true; };
+                    });
+                    window.addEventListener("mouseup", () => {
+                        if (!this.if_draged && this.if_dragable) {
+                            gsap.to(this.target_ele, {
+                                x: 0,
+                                y: 0,
+                                duration: 0.5,
+                                ease: "power1.out"
+                            });
+                        }
+                        this.if_dragable = false;
+                    });
+                    window.addEventListener("mousemove", () => {
+                        if (this.if_dragable) {
+                            this.move(event.clientX, event.clientY);
+                        };
+                    });
+                }
+                else {
+                    window.addEventListener("touchstart", () => {
+                        if (this.if_in) { this.if_dragable = true; };
+                    });
+                    window.addEventListener("touchend", () => {
+                        if (!this.if_draged && this.if_dragable) {
+                            gsap.to(this.target_ele, {
+                                x: 0,
+                                y: 0,
+                                duration: 0.5,
+                                ease: "power1.out"
+                            });
+                        }
+                        this.if_dragable = false;
+                        this.if_in = false;
+                    });
+                    window.addEventListener("touchmove", () => {
+                        if (this.if_dragable) {
+                            this.move(event.touches[0].pageX, event.touches[0].pageY);
+                        };
+                    });
+                };
+                this.creat_face();
+            },
+            creat_face() {
+                this.if_draged = false;
+                let image = document.createElementNS("http://www.w3.org/2000/svg", "image");
+                let g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                g.setAttribute("class", "portrait_head_face");
+                image.setAttribute("transform", "matrix(0.3077 0 0 0.3077 0 0)");
+                image.setAttribute("width", 350);
+                image.setAttribute("height", 350);
+                image.setAttribute("href", this.faces[parseInt(Math.random() * 9)].src);
+                if (!if_pmd) {
+                    g.onmouseenter = () => { this.if_in = true; };
+                    g.onmouseleave = () => { this.if_in = false; };
+                }
+                else {
+                    image.ontouchstart = () => { this.if_in = true; };
+                }
+                this.max_width = Math.max(innerWidth, innerHeight);
+                this.limit_distance = Math.random() * this.max_width / 4 + this.max_width / 4;
+                this.target_ele = g;
+                g.appendChild(image);
+                document.querySelector(".portrait_head svg").appendChild(g);
+            },
+            move(x, y) {
+                let distance = Math.pow(y - innerHeight / 2, 2) + Math.pow(x - innerWidth / 2, 2);
+                distance = Math.sqrt(distance);
+                let move_x = (x - innerWidth / 2) / this.limit_distance * 5;
+                let move_y = (y - innerHeight / 2) / this.limit_distance * 5;
+                gsap.to(this.target_ele, {
+                    x: `${move_x}px`,
+                    y: `${move_y}px`,
+                    duration: 0
+                });
+                if (distance > this.limit_distance) {
+                    let ele = this.target_ele;
+                    this.if_draged = true;
+                    this.if_dragable = false;
+                    this.if_in = false;
+                    this.target_ele.onmouseenter = '';
+                    this.target_ele.onmouseleave = '';
+                    this.target_ele.ontouchstart = '';
+                    gsap.to(this.target_ele, {
+                        x: `${x - innerWidth / 2}px`,
+                        y: `${y - innerHeight / 2}px`,
+                        rotate: `${Math.random() * 90 - 45}deg`,
+                        opacity: 0,
+                        duration: 0.3,
+                        ease: 'power4.out',
+                        onComplete: () => {
+                            document.querySelector(".portrait_head svg").removeChild(ele);
+                        }
+                    });
+                    this.creat_face();
+                };
+            },
+            change() {
+                this.prop_index = (this.prop_index + 1) % this.props.length;
+                if (this.player) this.player.kill()
+                this.player = gsap.timeline()
+                    .to(".portrait_body_arm", {
+                        rotate: `60deg`,
+                        duration: 0.8,
+                        ease: 'power4.out'
+                    })
+                    .to(".portrait_body_shoulder", {
+                        rotate: `5deg`,
+                        duration: 1,
+                        ease: 'power4.out',
+                    }, "<")
+                    .to(".portrait_body_arm", {
+                        rotate: `0deg`,
+                        duration: 0.5,
+                        ease: 'power4.out',
+                        onStart: () => {
+                            document.querySelector(".portrait_body_arm_prop")
+                                .setAttribute("xlink:href", this.props[this.prop_index].src);
+                            document.querySelector(".portrait_chatbox_content")
+                                .innerText = this.contents[this.prop_index];
+                        },
+                    }, "<0.5")
+                    .to(".portrait_body_shoulder", {
+                        rotate: `0deg`,
+                        duration: 0.8,
+                        ease: 'power4.out'
+                    }, "<")
+                    .to(".portrait_chatbox", {
+                        scale: '1.1',
+                        rotate: '0deg',
+                        duration: 0.2,
+                        ease: 'power4.out',
+                    }, "<")
+                    .to(".portrait_chatbox", {
+                        scale: '1',
+                        rotate: '-5deg',
+                        duration: 0.2,
+                        ease: 'power4.out',
+                    }, "<0.1")
+            },
+            show() {
+                gsap.to(".portrait_chatbox", {
+                    scale: 1,
+                    rotate: '-5deg',
+                    duration: 0.5,
+                    ease: 'power4.out',
+                    onComplete: () => {
+                        cards.if_changing = false;
+                    }
+                });
+            },
+            hidden() {
+                cards.check();
+                gsap.to(".portrait_chatbox", {
+                    scale: 0,
+                    rotate: '30deg',
+                    duration: 0.3,
+                    ease: 'power4.out',
+                });
+            },
+        },
+        about: {
+            show() {
+                gsap.to(".about_title, .about_subtitle, .about_content", {
+                    transform: 'translateY(0%)',
+                    opacity: 1,
+                    duration: 0.3,
+                    ease: 'power1.out',
+                    stagger: 0.05,
+                    onComplete: () => {
+                        cards.if_changing = false;
+                    }
+                });
+            },
+            hidden() {
+                cards.check();
+                gsap.to(".about_title, .about_subtitle, .about_content", {
+                    transform: 'translateY(10%)',
+                    opacity: 0,
+                    duration: 0.3,
+                    ease: 'power1.out',
+                    stagger: 0.05,
+                });
+            },
+        },
+        pictures: {
+            current_picture: 0,
+            ele_index: 0,
+            if_changeing: false,
+            imgs: [],
+            eles: [...document.querySelectorAll(".pictures_picturebox div")],
+            translate_datas: [
+                ["0%", "100%", "200%"],
+                ["0%", "100%", "-100%"],
+                ["0", "-200%", "-100%"],
+            ],
+            init() {
+                for (let i = 1; i <= 7; i++) {
+                    let img = new Image();
+                    img.src = `imgs/pictures/picture (${i}).jpg`;
+                    this.imgs.push(img);
+                };
+            },
+            change_picture(distance) {
+                if (!this.if_changeing) {
+                    this.if_changeing = true;
+                    setTimeout(() => {
+                        this.if_changeing = false;
+                    }, 500)
+                    this.current_picture = (this.current_picture - distance + this.imgs.length) % this.imgs.length;
+                    this.ele_index = (this.ele_index + distance + 3) % 3;
+                    this.eles.forEach((ele, i) => {
+                        let nums = parseInt(ele.getAttribute('nums'));
+                        if (nums == 2 && distance == 1) {
+                            ele.setAttribute("nums", 0);
+                            ele.style.transition = "0s";
+                        }
+                        else if (nums == 0 && distance == -1) {
+                            ele.setAttribute("nums", 2);
+                            ele.style.transition = "0s";
+                        }
+                        else {
+                            ele.setAttribute("nums", nums + distance);
+                            ele.style.transition = "0.5s ease";
+                        };
+                        if (nums == 0 && distance == 1)
+                            ele.querySelector("img").src = this.imgs[this.current_picture].src;
+                        if (nums == 2 && distance == -1)
+                            ele.querySelector("img").src = this.imgs[this.current_picture].src;
+                        ele.style.transform = `translateX(${this.translate_datas[i][this.ele_index]})`;
+                    });
+                }
+            },
+            show() {
+                gsap.to(".pictures_button_left, .pictures_button_right", {
+                    transform: 'translateX(0%)',
+                    opacity: 1,
+                    duration: 0.8,
+                    ease: 'power4.out',
+                    onComplete: () => {
+                        cards.if_changing = false;
+                    }
+                });
+            },
+            hidden() {
+                cards.check();
+                gsap.timeline()
+                    .to(".pictures_button_left", {
+                        transform: 'translateX(100%)',
+                        opacity: 0,
+                        duration: 0.8,
+                        ease: 'power4.out',
+                    })
+                    .to(".pictures_button_right", {
+                        transform: 'translateX(-100%)',
+                        opacity: 0,
+                        duration: 0.8,
+                        ease: 'power4.out',
+                    }, "<")
+            },
+        },
+        contact: {
+            show() {
+                gsap.to(".contact_title, .contact_information, .contact_codes", {
+                    transform: 'translateY(0%)',
+                    opacity: 1,
+                    duration: 0.5,
+                    ease: 'power1.out',
+                    stagger: 0.1,
+                    onComplete: () => {
+                        cards.if_changing = false;
+                    }
+                });
+            },
+            hidden() {
+                cards.check();
+                gsap.to(".contact_title, .contact_information, .contact_codes", {
+                    transform: 'translateY(10%)',
+                    opacity: 0,
+                    duration: 0.5,
+                    ease: 'power1.out',
+                    stagger: 0.1,
+                });
+            },
+        },
+    }
+    const background = {
+        container: document.querySelector(".background"),
+        init() {
+            for (let i = 0; i < 20; i++) {
+                let ele = document.createElement("img");
+                ele.src = "imgs/icons/icon heart.svg";
+                this.container.appendChild(ele);
+                this.move(ele);
+            };
+        },
+        move(ele) {
+            let y_distance = Math.random() * 100 + innerHeight;
+            ele.style.transform = `scale(${Math.random() + 0.5})`;
+            ele.style.left = `${Math.random() * innerWidth}px`;
+            ele.style.top = `${y_distance}px`;
+            gsap.to(ele, {
+                top: '-10rem',
+                duration: Math.random() * 5 + 3,
+                ease: 'linear',
+                onComplete: () => {
+                    this.move(ele);
+                }
+            });
+        }
+    };
+    const audio = {
+        if_playing: true,
+        gainNode: {},
+        vol: 1,
+        tone: 1,
+        init() {
+            const audioContext = new AudioContext();
+            fetch('./audio/BG.mp3')
+                .then(response => response.arrayBuffer())
+                .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
+                .then(audioBuffer => {
+                    const playAudio = () => {
+                        const source = audioContext.createBufferSource();
+                        this.gainNode = audioContext.createGain();
+                        source.buffer = audioBuffer;
+                        source.playbackRate.value = this.tone;
+                        source.connect(this.gainNode);
+                        this.gainNode.connect(audioContext.destination);
+                        this.gainNode.gain.value = this.vol;
+                        source.start();
+                        source.onended = () => {
+                            this.tone += 0.1;
+                            if (this.tone >= 3) this.tone = 1;
+                            playAudio();
+                        };
+                    };
+                    playAudio();
+                }).catch(e => console.error(e));
+        },
+        change_playstate() {
+            if (this.if_playing) this.vol = 0;
+            else this.vol = 1;
+            this.gainNode.gain.value = this.vol;
+            this.if_playing = !this.if_playing;
+            document.querySelector(".musictip").classList.toggle("musictip_off");
+        }
+    };
+    let if_pmd = false;
+    window.addEventListener("load", () => {
+        if (navigator.userAgent.indexOf("iPhone") != -1 ||
+            navigator.userAgent.indexOf("iPad") != -1 ||
+            navigator.userAgent.indexOf("iPod") != -1 ||
+            navigator.userAgent.indexOf("Android") != -1
+        ) { if_pmd = true; }
+        loading.init();
+        cards.portrait.init();
+        cards.pictures.init();
+        background.init();
+    });
+</script>
+
+</html>
