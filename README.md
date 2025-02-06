@@ -38,4 +38,4 @@
 | -------- | ---------| -------------
 | Black    | #0a0a0a  | ![#cf3004](https://placehold.co/15/0a0a0a/0a0a0a)
 | White    | #fafafa  | ![#f4e10d](https://placehold.co/15/fafafa/fafafa)
-| Pink     | #FC85AA  | ![#2d0245](https://placehold.co/15/FC85AA/FC85AA)
+| Pink     | #fc85aa  | ![#2d0245](https://placehold.co/15/fc85aa/fc85aa)
